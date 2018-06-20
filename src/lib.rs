@@ -24,7 +24,7 @@ struct Split {
 }
 
 impl Split {
-    fn split<'i, I: GenericImageView, V: ImageView<I>>(&self, image: &'i V) -> (&'i V, &'i V) {
+    fn split<'i, I: GenericImageView, V: ImageView<I>>(&self, image: &'i V) -> (V, V) {
         let (x, y, w, h) = image.bounds();
         match self.dir {
             SplitDirection::Horiz => (
@@ -69,8 +69,8 @@ impl<P: Pixel> Node<P> {
             child: if split.size > 1 {
                 let (a, b) = split.split(image);
                 Some(Box::new(NodeChild {
-                    a: Self::new_from_image_and_split(a, split_fn),
-                    b: Self::new_from_image_and_split(b, split_fn),
+                    a: Self::new_from_image_and_split(&a, split_fn),
+                    b: Self::new_from_image_and_split(&b, split_fn),
                     split,
                 }))
             } else {
